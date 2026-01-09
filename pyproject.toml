@@ -23,7 +23,7 @@ dependencies = [
     "ipykernel>=7.1.0",
     "kagglehub>=0.4.0",
     "loguru>=0.7.3",
-    "torch==2.6.0",
+    "torch==2.9.1",
     "torchvision>=0.21.0",
     "tqdm>=4.67.1",
     "typer==0.15.1",
