@@ -17,7 +17,7 @@ card_color_to_idx = {color: idx for idx, color in enumerate(card_color)}
 card_type = [ "joker", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
 card_type_to_idx = {ctype: idx for idx, ctype in enumerate(card_type)}
 
-def preprocess_data(processed_dir: str = "../../data/processed") -> None:
+def preprocess_data(processed_dir: str = "data/processed") -> None:
     # Download the dataset
     dataset_path = Path(kagglehub.dataset_download(DATASET_HANDLE))
     csv_path = dataset_path / "cards.csv"
@@ -73,7 +73,9 @@ def preprocess_data(processed_dir: str = "../../data/processed") -> None:
             processed_dir / f"{split}.pt"
         )
 
-def load_data(processed_dir: str = "../../data/processed", split: str = "train") -> TensorDataset:
+        print(f"Saved processed {split} data to", processed_dir / f"{split}.pt")
+
+def load_data(processed_dir: str = "data/processed", split: str = "train") -> TensorDataset:
     processed_dir = Path(processed_dir)
     data_path = processed_dir / f"{split}.pt"
     data = torch.load(data_path)
