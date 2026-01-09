@@ -2,6 +2,19 @@
 
 A short description of the project.
 
+**Overall goal of the project**
+Classify playing cards into suit and ranks.
+
+
+**What framework are you going to use, and you do you intend to include the framework into your project?**
+PyTorch
+
+***What data are you going to run on (initially, may change)**
+The dataset consists of images of playing cards, the dataset can be found here: https://www.kaggle.com/datasets/gpiosenka/cards-image-datasetclassification/code
+
+***What models do you expect to use**
+We expect to use EfficientNet.
+
 ## Project structure
 
 The directory structure of the project looks like this:
@@ -53,3 +66,4 @@ The directory structure of the project looks like this:
 Created using [mlops_template](https://github.com/SkafteNicki/mlops_template),
 a [cookiecutter template](https://github.com/cookiecutter/cookiecutter) for getting
 started with Machine Learning Operations (MLOps).
+
