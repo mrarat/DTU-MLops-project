@@ -4,7 +4,7 @@ import typer
 from torch.utils.data import Dataset
 
 
-class MyDataset(Dataset):
+class PlayingCards(Dataset):
     """My custom dataset."""
 
     def __init__(self, data_path: Path) -> None:
@@ -19,11 +19,11 @@ class MyDataset(Dataset):
     def preprocess(self, output_folder: Path) -> None:
         """Preprocess the raw data and save it to the output folder."""
 
-def preprocess(data_path: Path, output_folder: Path) -> None:
-    print("Preprocessing data...")
-    dataset = MyDataset(data_path)
-    dataset.preprocess(output_folder)
+def playing_cards(data_path: Path, output_folder: Path) -> None:
+    # print("Preprocessing data...")
+    # dataset = MyDataset(data_path)
+    # dataset.preprocess(output_folder)
 
 
 if __name__ == "__main__":
-    typer.run(preprocess)
+    typer.run(playing_cards)
