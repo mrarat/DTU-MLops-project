@@ -4,7 +4,7 @@ import typer
 import torch
 import hydra
 
-@hydra.main(version_base = None, config_path = "/configs", config_name = "config.yaml")
+@hydra.main(version_base = None, config_path = "configs", config_name = "config.yaml")
 def train(cfg):
     batch_size = cfg.hyperparameters.batch_size
     epochs = cfg.hyperparameters.epochs
@@ -18,7 +18,7 @@ def train(cfg):
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size)
     test_dataloader = torch.utils.data.DataLoader(test_set, batch_size=batch_size)
 
-    loss_fn = torch.nn.BCELoss() # Using binary cross entropy 
+    loss_fn = torch.nn.CrossEntropyLoss() # Using Cross entropy 
     rank_weight = 1
     suit_weight = 1 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
