@@ -4,6 +4,7 @@ import torch
 import hydra
 import os
 from hydra.utils import get_original_cwd
+import wandb
 
 DEVICE = torch.device(
     "cuda" if torch.cuda.is_available()
@@ -21,6 +22,11 @@ def train(cfg):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
+    # Logging
+    wandb.init(project='playing-cards-mlops',config={'epochs':epochs,'batch size':batch_size,
+                                                     'learning rate':lr,'seed':seed})
+
+    # Loading data
     train_set, test_set = fetch_cards() # FIXME:missing how to correctly load data 
     model = Model().to(DEVICE)
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
@@ -31,7 +37,10 @@ def train(cfg):
     suit_weight = 1 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
+
     statistics = {"train_loss": [], "train_accuracy_suit": [], "train_accuracy_rank": []}
+
+    # start training
     for epoch in range(epochs):
         model.train()
         for i, (img, target) in enumerate(train_dataloader):
@@ -40,11 +49,17 @@ def train(cfg):
             img = img.to(DEVICE)
             target['rank'] = target['rank'].to(DEVICE)
             target['suit'] = target['suit'].to(DEVICE)
+
+            #predict
             y_pred = model(img)
             
+            # compute loss
             loss = suit_weight*loss_fn(y_pred['suit'], target['suit']) + rank_weight*loss_fn(y_pred['rank'], target['rank'])  # calculating loss as sum of the seperate losses
+            # gradient step
             loss.backward()
             optimizer.step()
+
+            # Statistics
             statistics["train_loss"].append(loss.item())
 
             r_accuracy = (y_pred['rank'].argmax(dim=1) == target['rank']).float().mean().item()
@@ -53,13 +68,16 @@ def train(cfg):
             statistics["train_accuracy_rank"].append(r_accuracy)
             statistics["train_accuracy_suit"].append(s_accuracy)
 
+            # Logging
+            wandb.log({'loss':loss.item(),'rank accuracy':r_accuracy,'suit accuracy':s_accuracy})
+            
+
             if i % 100 == 0:
                 print(f"Epoch {epoch}, iter {i}, loss: {loss.item():.4f}, "
                       f"rank_acc: {r_accuracy:.4f}, suit_acc: {s_accuracy:.4f}")
 
     print("Training complete")   
     save_dir = os.path.join(get_original_cwd(), "models")
-    os.makedirs(save_dir, exist_ok=True)
     torch.save(model.state_dict(), os.path.join(save_dir, "model.pth"))
 
 if __name__ == "__main__":
