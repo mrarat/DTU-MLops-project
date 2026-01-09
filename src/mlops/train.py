@@ -2,8 +2,17 @@ from mlops.model import Model
 from mlops.data import fetch_cards
 import typer
 import torch
+import hydra
 
-def train(lr: float = 1e-3, batch_size: int = 32, epochs: int = 10):
+@hydra.main(version_base = None, config_path = "/configs", config_name = "config.yaml")
+def train(cfg):
+    batch_size = cfg.hyperparameters.batch_size
+    epochs = cfg.hyperparameters.epochs
+    lr = cfg.hyperparameters.lr
+    seed = cfg.hyperparameters.seed
+
+    torch.manual_seed(seed)
+
     train_set, test_set = fetch_cards() # FIXME:missing how to correctly load data 
     model = Model()
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size)
