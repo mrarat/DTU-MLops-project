@@ -246,7 +246,7 @@ We have implemented a test of the model, which tests that the model is initializ
 >
 > Answer:
 
---- question 9 fill here ---
+Every time we embarked on a new task, we created a new branch for this, which was merged with the main branch after the task was completed. This was done such that we could apply the tests to the new changes before merging and check for merge conflicts in github.
 
 ### Question 10
 
