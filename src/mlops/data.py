@@ -12,11 +12,11 @@ from loguru import logger
 
 DATASET_HANDLE = "gpiosenka/cards-image-datasetclassification"
 
-card_color = ["hearts", "diamonds", "clubs", "spades"]
-card_color_to_idx = {color: idx for idx, color in enumerate(card_color)}
+suit = ["hearts", "diamonds", "clubs", "spades"]
+card_suit_to_idx = {color: idx for idx, color in enumerate(suit)}
 
-card_type = [ "joker", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
-card_type_to_idx = {ctype: idx for idx, ctype in enumerate(card_type)}
+rank = [ "joker", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
+card_rank_to_idx = {ctype: idx for idx, ctype in enumerate(rank)}
 
 def preprocess_data(processed_dir: str = "data/processed") -> None:
     # Download the dataset
@@ -46,15 +46,17 @@ def preprocess_data(processed_dir: str = "data/processed") -> None:
 
             class_name = row["labels"]
             if " of " in class_name:
-                card_type, card_color = class_name.split(" of ", 1)
+                rank, suit = class_name.split(" of ", 1)
             else:
-                card_type, card_color = class_name, "hearts"  # Default color for jokers
+                rank, suit = class_name, "hearts"  # Default color for jokers
 
             card_type_idx = card_type_to_idx.get(card_type, -1) # TODO: check if all types are mapped correctly
             card_color_idx = card_color_to_idx.get(card_color, -1) # TODO: chack if all colors are mapped correctly
+            card_rank_idx = card_rank_to_idx.get(card_type, -1)
+            card_suit_idx = card_suit_to_idx.get(card_color, -1)
 
             images[split].append(image)
-            labels[split].append(torch.tensor([card_type_idx, card_color_idx], dtype=torch.long))
+            labels[split].append(torch.tensor([card_rank_idx, card_suit_idx], dtype=torch.long))
 
     # Convert data into TensorDatasets
     logger.info("Creating TensorDatasets...")
