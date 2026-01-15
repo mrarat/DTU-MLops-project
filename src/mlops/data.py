@@ -74,7 +74,9 @@ def preprocess_data(processed_dir: str = "data/processed", include_joker: bool =
             card_suit_idx = card_suit_to_idx.get(card_suit, -1)
 
             if card_rank_idx == -1 or card_suit_idx == -1:
-                logger.error(f"Unknown card rank or suit: \"{class_name}\" in file {img_path} - card_rank_idx: {card_rank_idx}, card_suit_idx: {card_suit_idx}")
+                logger.error(
+                    f'Unknown card rank or suit: "{class_name}" in file {img_path} - card_rank_idx: {card_rank_idx}, card_suit_idx: {card_suit_idx}'
+                )
                 continue
 
             images[split].append(image)

@@ -1,7 +1,7 @@
 from torch.utils.data import Dataset
 from pathlib import Path
 
-from mlops.data import *
+from mlops.data import preprocess_data, load_data
 
 
 def test_data(tmp_path: Path) -> None:

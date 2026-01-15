@@ -1,7 +1,7 @@
 import torch
-from pathlib import Path
 import mlops.train as train_mod
 from mlops.train import train as train_fn
+
 
 def test_train_saves_model(monkeypatch, tmp_path):
     # Patch wandb to avoid external calls
@@ -10,10 +10,12 @@ def test_train_saves_model(monkeypatch, tmp_path):
 
     # Use a tiny dataset (1 sample) to keep training fast
     class TinyDataset(torch.utils.data.Dataset):
-        def __len__(self): return 1
+        def __len__(self):
+            return 1
+
         def __getitem__(self, idx):
             img = torch.zeros((3, 224, 224))  # dummy image
-            target = torch.tensor([0, 0])   # dummy rank/suit
+            target = torch.tensor([0, 0])  # dummy rank/suit
             return img, target
 
     monkeypatch.setattr(train_mod, "load_data", lambda split: TinyDataset())

@@ -29,7 +29,7 @@ def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
     model = Model().to(DEVICE)
     model.load_state_dict(torch.load(model_checkpoint))
 
-    test_set = load_data(split = "test")
+    test_set = load_data(split="test")
     test_dataloader = torch.utils.data.DataLoader(test_set, batch_size=batch_size)
     model.eval()
     rank_correct = 0
@@ -39,7 +39,7 @@ def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
 
     with torch.no_grad():
         for img, targets in test_dataloader:
-            img = (img.float() / 255.0).to(DEVICE) # convert to float in [0,1]
+            img = (img.float() / 255.0).to(DEVICE)  # convert to float in [0,1]
             targets = targets.to(DEVICE, dtype=torch.long)
             rank_targets = targets[:, 0]
             suit_targets = targets[:, 1]
