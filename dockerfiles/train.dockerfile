@@ -9,6 +9,7 @@ WORKDIR /
 COPY uv.lock uv.lock
 COPY pyproject.toml pyproject.toml
 COPY README.md README.md
+COPY LICENSE LICENSE
 COPY src/ src/
 COPY data/ data/
 COPY models/ models/

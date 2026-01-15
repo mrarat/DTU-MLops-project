@@ -1,0 +1,60 @@
+_wandb:
+    value:
+        cli_version: 0.23.1
+        e:
+            bl5ezmc5x7aih9c9cxbiic4qdsovow5e:
+                apple:
+                    ecpuCores: 4
+                    gpuCores: 16
+                    memoryGb: 16
+                    name: Apple M2 Pro
+                    pcpuCores: 6
+                    ramTotalBytes: "17179869184"
+                    swapTotalBytes: "11811160064"
+                codePath: src/mlops/train.py
+                codePathLocal: src/mlops/train.py
+                cpu_count: 10
+                cpu_count_logical: 10
+                disk:
+                    /:
+                        total: "494384795648"
+                        used: "455413792768"
+                email: helgamariam@gmail.com
+                executable: /Users/helgamariamagnusdottir/Documents/dtu/ml_ops/DTU-MLops-project/.venv/bin/python3
+                git:
+                    commit: 9bba3b1f72484c688cf734ac7c5976e7edfb9aaa
+                    remote: https://github.com/mrarat/DTU-MLops-project.git
+                host: mac.students.clients.local
+                memory:
+                    total: "17179869184"
+                os: macOS-15.6.1-arm64-arm-64bit-Mach-O
+                program: /Users/helgamariamagnusdottir/Documents/dtu/ml_ops/DTU-MLops-project/src/mlops/train.py
+                python: CPython 3.13.11
+                root: /Users/helgamariamagnusdottir/Documents/dtu/ml_ops/DTU-MLops-project
+                startedAt: "2026-01-15T09:06:59.061750Z"
+                writerId: bl5ezmc5x7aih9c9cxbiic4qdsovow5e
+        m: []
+        python_version: 3.13.11
+        t:
+            "1":
+                - 1
+                - 41
+                - 50
+            "2":
+                - 1
+                - 41
+                - 50
+            "3":
+                - 16
+            "4": 3.13.11
+            "5": 0.23.1
+            "12": 0.23.1
+            "13": darwin-arm64
+batch size:
+    value: 32
+epochs:
+    value: 10
+learning rate:
+    value: 0.001
+seed:
+    value: 42

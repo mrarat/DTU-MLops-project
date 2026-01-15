@@ -1,6 +1,6 @@
 # mlops
 
-## Project Describtion 
+## Project Describtion
 
 ### Overall goal
 Classifing playing cards into suit and rank.
@@ -15,7 +15,9 @@ The dataset consists of images of playing cards, the dataset can be found here: 
 ### What models do you expect to use
 We expect to use MobileNet.
 
+
 ## Project structure
+````markdown
 
 The directory structure of the project looks like this:
 ```txt
@@ -57,8 +59,6 @@ The directory structure of the project looks like this:
 ├── LICENSE
 ├── pyproject.toml            # Python project file
 ├── README.md                 # Project README
-├── requirements.txt          # Project requirements
-├── requirements_dev.txt      # Development requirements
 └── tasks.py                  # Project tasks
 ```
 
@@ -66,4 +66,13 @@ The directory structure of the project looks like this:
 Created using [mlops_template](https://github.com/SkafteNicki/mlops_template),
 a [cookiecutter template](https://github.com/cookiecutter/cookiecutter) for getting
 started with Machine Learning Operations (MLOps).
+````
 
+### Enable pre-commit
+`uv run pre-commit install`
+
+to ignore pre-commit use `--no-verify` flag when committing, e.g.
+`git commit -m <message> --no-verify`
+
+to run precommit manually use
+`uv run pre-commit run --all-files`

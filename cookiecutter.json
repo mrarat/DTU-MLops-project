@@ -1,0 +1,14 @@
+{
+  "repo_name": "dtu-mlops-project",
+  "project_name": "mlops",
+  "project_structure": ["advance", "simple"],
+  "deps_manager": ["uv", "pip"],
+  "add_coding_agent_support": [true, false],
+  "author_name": "Group 48",
+  "description": "A short description of the project.",
+  "python_version": "3.12",
+  "open_source_license": ["No license file", "MIT", "BSD-3-Clause"],
+  "_copy_without_render": [
+    "**/workflows/*"
+  ]
+}
