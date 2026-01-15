@@ -12,11 +12,11 @@ from loguru import logger
 
 DATASET_HANDLE = "gpiosenka/cards-image-datasetclassification"
 
-card_color = ["hearts", "diamonds", "clubs", "spades"]
-card_color_to_idx = {color: idx for idx, color in enumerate(card_color)}
+card_suit = ["hearts", "diamonds", "clubs", "spades"]
+card_suit_to_idx = {color: idx for idx, color in enumerate(card_suit)}
 
-card_type = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king", "ace", "joker"]
-card_type_to_idx = {ctype: idx for idx, ctype in enumerate(card_type)}
+card_rank = ["two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king", "ace", "joker"]
+card_rank_to_idx = {ctype: idx for idx, ctype in enumerate(card_rank)}
 
 def preprocess_data(processed_dir: str = "data/processed", include_joker: bool = False) -> None:
     # Download the dataset
@@ -46,22 +46,22 @@ def preprocess_data(processed_dir: str = "data/processed", include_joker: bool =
 
             class_name = row["labels"]
             if " of " in class_name:
-                card_type, card_color = class_name.split(" of ", 1)
+                card_rank, card_suit = class_name.split(" of ", 1)
             else:
-                card_type, card_color = class_name, "hearts"  # Default color for jokers
+                card_rank, card_suit = class_name, "hearts"  # Default color for jokers
 
-            if not include_joker and card_type == "joker":
+            if not include_joker and card_rank == "joker":
                 continue
 
-            card_type_idx = card_type_to_idx.get(card_type, -1)
-            card_color_idx = card_color_to_idx.get(card_color, -1)
+            card_rank_idx = card_rank_to_idx.get(card_rank, -1)
+            card_suit_idx = card_suit_to_idx.get(card_suit, -1)
 
-            if card_type_idx == -1 or card_color_idx == -1:
+            if card_rank_idx == -1 or card_suit_idx == -1:
                 logger.error(f"Unknown card type or color: \"{class_name}\" in file {img_path} - card_type_idx: {card_type_idx}, card_color_idx: {card_color_idx}")
                 continue
 
             images[split].append(image)
-            labels[split].append(torch.tensor([card_type_idx, card_color_idx], dtype=torch.long))
+            labels[split].append(torch.tensor([card_rank_idx, card_suit_idx], dtype=torch.long))
 
     # Convert data into TensorDatasets
     logger.info("Creating TensorDatasets...")
