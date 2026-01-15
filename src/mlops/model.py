@@ -50,7 +50,7 @@ class Model(nn.Module):
 
 if __name__ == "__main__":
     model = Model()
-    #print(model)
+    # print(model)
     print(f"Number of parameters: {sum(p.numel() for p in model.parameters())}")
 
     dummy_input = torch.rand(1, 3, 224, 224)

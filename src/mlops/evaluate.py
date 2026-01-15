@@ -4,20 +4,17 @@ from mlops.data import playing_cards
 import torch
 import typer
 import wandb
-from pathlib import Path
-#import matplotlib.pyplot as plt
+# from pathlib import Path
+# import matplotlib.pyplot as plt
 
-DEVICE = torch.device(
-    "cuda" if torch.cuda.is_available()
-    else "mps" if torch.backends.mps.is_available()
-    else "cpu"
-)
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+
 
 def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
     """Evaluate a trained model."""
     print("Evaluating like my life depended on it")
     print(model_checkpoint)
-    
+
     # WandB init
     run = wandb.init(
         project="playing-cards-mlops",
@@ -40,26 +37,26 @@ def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
     suit_correct = 0
     both_correct = 0
     n = 0
-    
+
     with torch.no_grad():
         for img, rank_targets, suit_targets in test_dataloader:
             img = img.to(DEVICE)
             rank_targets = rank_targets.to(DEVICE)
             suit_targets = suit_targets.to(DEVICE)
-            
+
             out = model(img)
             rank_pred = out["rank"].argmax(dim=1)
             suit_pred = out["suit"].argmax(dim=1)
-            
+
             rank_correct += (rank_pred == rank_targets).sum().item()
             suit_correct += (suit_pred == suit_targets).sum().item()
             both_correct += ((rank_pred == rank_targets) & (suit_pred == suit_targets)).sum().item()
             n += img.size(0)
-            
-    rank_acc  = rank_correct / n
-    suit_acc  = suit_correct / n
+
+    rank_acc = rank_correct / n
+    suit_acc = suit_correct / n
     joint_acc = both_correct / n
-    
+
     # Log in wandB
     wandb.log(
         {
@@ -69,6 +66,7 @@ def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
             "eval/num_samples": n,
         }
     )
-    
+
+
 if __name__ == "__main__":
     typer.run(evaluate)

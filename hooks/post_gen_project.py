@@ -7,10 +7,11 @@ try:
     from loguru import logger
 except ImportError:
     import logging
+
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     handler = logging.StreamHandler()
-    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
     logger.addHandler(handler)
 
 project_name = "{{cookiecutter.project_name}}"
@@ -52,7 +53,10 @@ if not (ge(python_version, min_version) and le(python_version, max_version)):
 if project_structure == "simple":
     logger.info("Removing unnecessary files and folders for the simple template.")
     folder_and_files_to_remove = [
-        ".github", ".devcontainer", "dockerfiles", "docs",
+        ".github",
+        ".devcontainer",
+        "dockerfiles",
+        "docs",
     ]
     for f in folder_and_files_to_remove:
         if Path(f).exists():
