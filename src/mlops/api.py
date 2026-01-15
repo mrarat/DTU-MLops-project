@@ -27,7 +27,7 @@ app = FastAPI(lifespan=lifespan)
 # IDEA ?? maybe use this for showing card + predicted rank & suit
 # @app.post("/caption/")
 # async def caption(data: UploadFile = File(...)):
-#     """Generate a caption for an image."""
+#     """Generate rank & suit for an image."""
 #     i_image = Image.open(data.file)
 #     if i_image.mode != "RGB":
 #         i_image = i_image.convert(mode="RGB")
