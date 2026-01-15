@@ -132,7 +132,7 @@ Group 48
 >
 > Answer:
 
---- question 2 fill here ---
+s245822, s234136, s245261, s243069, s253167
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -216,7 +216,7 @@ Group 48
 >
 > Answer:
 
---- question 7 fill here ---
+We have implemented a test of the model, which tests that the model is initialized correctly, with the correct dimensions. We also test the training, where we test that the training can run without issues and that the model is saved. We also test the data preprocessing, where it is tested that the processed data is saved in the correct place when the function is run. We also check that we get datasets of the correct sizes when we load the preprocessed data.
 
 ### Question 8
 
@@ -246,7 +246,7 @@ Group 48
 >
 > Answer:
 
---- question 9 fill here ---
+Every time we embarked on a new task, we created a new branch for this, which was merged with the main branch after the task was completed. This was done such that we could apply the tests to the new changes before merging and check for merge conflicts in github.
 
 ### Question 10
 

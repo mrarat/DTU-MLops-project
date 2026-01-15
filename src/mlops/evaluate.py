@@ -4,8 +4,7 @@ from mlops.data import load_data
 import torch
 import typer
 import wandb
-# from pathlib import Path
-# import matplotlib.pyplot as plt
+
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
@@ -38,11 +37,6 @@ def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
     n = 0
 
     with torch.no_grad():
-        for img, targets in test_dataloader:
-            img = (img.float() / 255.0).to(DEVICE)  # convert to float in [0,1]
-            targets = targets.to(DEVICE, dtype=torch.long)
-            rank_targets = targets[:, 0]
-            suit_targets = targets[:, 1]
         for img, rank_targets, suit_targets in test_dataloader:
             img = img.to(DEVICE)
             rank_targets = rank_targets.to(DEVICE)
