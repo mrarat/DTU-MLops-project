@@ -16,7 +16,7 @@ def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
     print(model_checkpoint)
 
     # WandB init
-    run = wandb.init(
+    wandb.init(
         project="playing-cards-mlops",
         job_type="evaluation",
         config={

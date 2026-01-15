@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from mlops.model import Model
 from mlops.data import load_data
 import torch
@@ -9,6 +10,9 @@ import wandb
 import random
 import numpy as np
 from omegaconf import DictConfig, OmegaConf
+from pathlib import Path
+
+
 
 log = logging.getLogger(__name__)
 
@@ -110,7 +114,7 @@ def train(cfg: DictConfig) -> None:
         type="model",
     )
     model_artifact.add_file("models/model.pth")
-    run.log_artifact(model_artifact)
+    wandb.log_artifact(model_artifact)
 
 if __name__ == "__main__":
     train()
