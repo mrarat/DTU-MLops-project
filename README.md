@@ -76,6 +76,10 @@ started with Machine Learning Operations (MLOps).
 - uvx invoke train
 - uvx invoke evaluate
 
+## run tests to check model
+- uvx invoke test
+
+
 
 ## Enable pre-commit
 `uv run pre-commit install`
@@ -91,9 +95,13 @@ to run precommit manually use
 
 Requieres the wand API key to be in .env.
 
+
+
 Build and run train.dockerfile:
 - docker build -f dockerfiles/train.dockerfile . -t train:latest
 - docker run --env-file .env --name experiment-mlops-train train:latest
+OR with envoke:
+- uvx invoke docker_build
 
 Build and run evaluate.dockerfile:
 - docker build -f dockerfiles/evaluate.dockerfile . -t evaluate:latest
