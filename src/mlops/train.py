@@ -31,7 +31,6 @@ def set_seed(seed: int) -> None:
 CONFIG_DIR = Path(__file__).resolve().parents[2] / "configs"
 
 
-@hydra.main(version_base=None, config_path=str(CONFIG_DIR), config_name = "defaults")
 def train(cfg: DictConfig) -> None:
     
     # Resolve interpolations + convert to plain Python for W&B
@@ -104,9 +103,9 @@ def train(cfg: DictConfig) -> None:
     print("Training complete")
 
     # Save model
-    # save_dir = os.path.join(get_original_cwd(), "models")
-    torch.save(model.state_dict(), "models/model.pth")
-    # torch.save(model.state_dict(), os.path.join(save_dir, "model.pth"))
+    save_dir = os.path.join(get_original_cwd(), "models")
+    os.makedirs(save_dir, exist_ok=True)
+    torch.save(model.state_dict(), os.path.join(save_dir, "model.pth"))
 
     # Log as W&B artifact
     model_artifact = wandb.Artifact(
@@ -115,6 +114,10 @@ def train(cfg: DictConfig) -> None:
     )
     model_artifact.add_file("models/model.pth")
     wandb.log_artifact(model_artifact)
+    
+@hydra.main(version_base=None, config_path=str(CONFIG_DIR), config_name = "defaults")
+def main(cfg: DictConfig) -> None:
+    train(cfg)
 
 if __name__ == "__main__":
-    train()
+    main()
