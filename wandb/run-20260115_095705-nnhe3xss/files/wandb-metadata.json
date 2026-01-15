@@ -1,0 +1,37 @@
+{
+  "os": "macOS-15.6.1-arm64-arm-64bit-Mach-O",
+  "python": "CPython 3.13.11",
+  "startedAt": "2026-01-15T08:57:05.711082Z",
+  "program": "/Users/helgamariamagnusdottir/Documents/dtu/ml_ops/DTU-MLops-project/src/mlops/train.py",
+  "codePath": "src/mlops/train.py",
+  "codePathLocal": "src/mlops/train.py",
+  "git": {
+    "remote": "https://github.com/mrarat/DTU-MLops-project.git",
+    "commit": "8cf4c47cb63094b120d5b0c38eb24e25176a8a7b"
+  },
+  "email": "helgamariam@gmail.com",
+  "root": "/Users/helgamariamagnusdottir/Documents/dtu/ml_ops/DTU-MLops-project",
+  "host": "mac.students.clients.local",
+  "executable": "/Users/helgamariamagnusdottir/Documents/dtu/ml_ops/DTU-MLops-project/.venv/bin/python3",
+  "cpu_count": 10,
+  "cpu_count_logical": 10,
+  "disk": {
+    "/": {
+      "total": "494384795648",
+      "used": "454322642944"
+    }
+  },
+  "memory": {
+    "total": "17179869184"
+  },
+  "apple": {
+    "name": "Apple M2 Pro",
+    "ecpuCores": 4,
+    "pcpuCores": 6,
+    "gpuCores": 16,
+    "memoryGb": 16,
+    "swapTotalBytes": "10737418240",
+    "ramTotalBytes": "17179869184"
+  },
+  "writerId": "w39856ov57wtuulxp23tigp28y96z3ch"
+}

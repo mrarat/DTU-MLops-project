@@ -55,17 +55,16 @@ def train():
         model.train()
         for i, (img, targets) in enumerate(train_dataloader):
             optimizer.zero_grad()
-            img = (img.float() / 255.0).to(DEVICE)  # convert to float in [0,1]
-
-            targets = targets.to(DEVICE, dtype=torch.long)
-            rank_targets = targets[:, 0]
-            suit_targets = targets[:, 1]
+            img = (img.float() / 255.0).to(DEVICE)
+            target = target.to(DEVICE)
+            rank_t = target[:,0] # 0 is rank
+            suit_t = target[:,1] # 1 is suit
 
             #predict
             y_pred = model(img)
             
             # compute loss
-            loss = suit_weight*loss_fn(y_pred['suit'], suit_targets) + rank_weight*loss_fn(y_pred['rank'], rank_targets)  # calculating loss as sum of the seperate losses
+            loss = suit_weight*loss_fn(y_pred['suit'], suit_t) + rank_weight*loss_fn(y_pred['rank'], rank_t) 
             # gradient step
             loss.backward()
             optimizer.step()
@@ -80,17 +79,16 @@ def train():
             statistics["train_accuracy_suit"].append(s_accuracy)
 
             # Logging
-            wandb.log({'loss':loss.item(),'rank accuracy':r_accuracy,'suit accuracy':s_accuracy})
             
 
             if i % 100 == 0:
                 print(f"Epoch {epoch}, iter {i}, loss: {loss.item():.4f}, "
                       f"rank_acc: {r_accuracy:.4f}, suit_acc: {s_accuracy:.4f}")
+                wandb.log({'loss':loss.item(),'rank accuracy':r_accuracy,'suit accuracy':s_accuracy})
 
     print("Training complete")   
     # save_dir = os.path.join(get_original_cwd(), "models")
     torch.save(model.state_dict(), "models/model.pth")
     # torch.save(model.state_dict(), os.path.join(save_dir, "model.pth"))
-
 if __name__ == "__main__":
     train()
