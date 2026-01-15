@@ -26,7 +26,6 @@ def train():
     torch.cuda.manual_seed_all(seed)
 
     # Logging
-<<<<<<< HEAD
     wandb.init(project='playing-cards-mlops',
                job_type="train",
                config={
@@ -37,7 +36,6 @@ def train():
 
     # Loading data
     train_set = load_data(split = "train")
-=======
     wandb.init(
         project="playing-cards-mlops",
         config={"epochs": epochs, "batch size": batch_size, "learning rate": lr, "seed": seed},
@@ -46,7 +44,6 @@ def train():
     # Loading data
     train_set = load_data(split="train")
     test_set = load_data(split="test")
->>>>>>> e823aad (added changes from ruff)
     model = Model().to(DEVICE)
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
 
@@ -62,30 +59,24 @@ def train():
         model.train()
         for i, (img, targets) in enumerate(train_dataloader):
             optimizer.zero_grad()
-<<<<<<< HEAD
             img = (img.float() / 255.0).to(DEVICE)
             target = target.to(DEVICE)
             rank_t = target[:,0] # 0 is rank
             suit_t = target[:,1] # 1 is suit
-=======
             img = img.float() / 255.0  # convert to float in [0,1]
             img = img.to(DEVICE)
             # print(target)
             target[:, 0] = target[:, 0].to(DEVICE)  # 0 is rank
             target[:, 1] = target[:, 1].to(DEVICE)  # 1 is suit
->>>>>>> e823aad (added changes from ruff)
 
             # predict
             y_pred = model(img)
 
             # compute loss
-<<<<<<< HEAD
             loss = suit_weight*loss_fn(y_pred['suit'], suit_t) + rank_weight*loss_fn(y_pred['rank'], rank_t) 
-=======
             loss = suit_weight * loss_fn(y_pred["suit"], target[:, 1]) + rank_weight * loss_fn(
                 y_pred["rank"], target[:, 0]
             )  # calculating loss as sum of the seperate losses
->>>>>>> e823aad (added changes from ruff)
             # gradient step
             loss.backward()
             optimizer.step()
@@ -93,26 +84,21 @@ def train():
             # Statistics
             statistics["train_loss"].append(loss.item())
 
-<<<<<<< HEAD
             r_accuracy = (y_pred['rank'].argmax(dim=1) == rank_targets).float().mean().item()
             s_accuracy = (y_pred['suit'].argmax(dim=1) == suit_targets).float().mean().item()
-=======
             r_accuracy = (y_pred["rank"].argmax(dim=1) == target[:, 0]).float().mean().item()
             s_accuracy = (y_pred["suit"].argmax(dim=1) == target[:, 1]).float().mean().item()
->>>>>>> e823aad (added changes from ruff)
 
             statistics["train_accuracy_rank"].append(r_accuracy)
             statistics["train_accuracy_suit"].append(s_accuracy)
 
             # Logging
-<<<<<<< HEAD
             
 
             if i % 100 == 0:
                 print(f"Epoch {epoch}, iter {i}, loss: {loss.item():.4f}, "
                       f"rank_acc: {r_accuracy:.4f}, suit_acc: {s_accuracy:.4f}")
                 wandb.log({'loss':loss.item(),'rank accuracy':r_accuracy,'suit accuracy':s_accuracy})
-=======
             wandb.log({"loss": loss.item(), "rank accuracy": r_accuracy, "suit accuracy": s_accuracy})
 
             if i % 100 == 0:
@@ -120,16 +106,12 @@ def train():
                     f"Epoch {epoch}, iter {i}, loss: {loss.item():.4f}, "
                     f"rank_acc: {r_accuracy:.4f}, suit_acc: {s_accuracy:.4f}"
                 )
->>>>>>> e823aad (added changes from ruff)
 
     print("Training complete")
     # save_dir = os.path.join(get_original_cwd(), "models")
     torch.save(model.state_dict(), "models/model.pth")
     # torch.save(model.state_dict(), os.path.join(save_dir, "model.pth"))
-<<<<<<< HEAD
-=======
 
 
->>>>>>> e823aad (added changes from ruff)
 if __name__ == "__main__":
     train()

@@ -38,18 +38,15 @@ def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
     n = 0
 
     with torch.no_grad():
-<<<<<<< HEAD
         for img, targets in test_dataloader:
             img = (img.float() / 255.0).to(DEVICE) # convert to float in [0,1]
             targets = targets.to(DEVICE, dtype=torch.long)
             rank_targets = targets[:, 0]
             suit_targets = targets[:, 1]
-=======
         for img, rank_targets, suit_targets in test_dataloader:
             img = img.to(DEVICE)
             rank_targets = rank_targets.to(DEVICE)
             suit_targets = suit_targets.to(DEVICE)
->>>>>>> e823aad (added changes from ruff)
 
             out = model(img)
             rank_pred = out["rank"].argmax(dim=1)
@@ -73,11 +70,8 @@ def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
             "eval/num_samples": n,
         }
     )
-<<<<<<< HEAD
     print(f"rank_accuracy {rank_acc}, eval/suit_accuracy {suit_acc}, joint_accuracy {joint_acc}, num_samples {n}")
-=======
 
 
->>>>>>> e823aad (added changes from ruff)
 if __name__ == "__main__":
     typer.run(evaluate)
