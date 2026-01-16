@@ -3,13 +3,15 @@ project: playing-card-classifier
 entity: mlops-group-42
 method: bayes
 metric:
-  goal: minimize
-  name: validation_loss
+  goal: maximize
+  name: eval/avg_accuracy
 parameters:
   lr:
     max: 0.1
     min: 0.0001
     distribution: log_uniform_values
+  r_weights:
+    values: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
   batch_size:
     values: [16, 32, 64]
   epochs:

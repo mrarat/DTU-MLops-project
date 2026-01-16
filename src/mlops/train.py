@@ -44,13 +44,13 @@ def train(cfg: DictConfig) -> None:
     train_set = load_data(processed_dir=os.path.join(get_original_cwd(), "data/processed"), split="train")
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
     eval_set = load_data(processed_dir=os.path.join(get_original_cwd(), "data/processed"), split="valid")
-    eval_dataloader = torch.utils.data.DataLoader(eval_set, batch_size=batch_size, shuffle=True)
+    eval_dataloader = torch.utils.data.DataLoader(eval_set, batch_size=batch_size, shuffle=False)
 
     model = Model().to(DEVICE)
-    loss_fn = torch.nn.CrossEntropyLoss(ignore_index=-1)  # Using Cross entropy, ignore labels of -1 (missing)
+    loss_fn = torch.nn.CrossEntropyLoss()
 
-    rank_weight = 1
-    suit_weight = 1
+    r_weight = 0.5
+    s_weight = 1 - r_weight
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     step = 0
@@ -65,7 +65,7 @@ def train(cfg: DictConfig) -> None:
             suit_t = targets[:, 1]
 
             y_pred = model(img)
-            loss = suit_weight * loss_fn(y_pred["suit"], suit_t) + rank_weight * loss_fn(y_pred["rank"], rank_t)
+            loss = s_weight * loss_fn(y_pred["suit"], suit_t) + r_weight * loss_fn(y_pred["rank"], rank_t)
 
             # gradient step
             loss.backward()
@@ -76,11 +76,25 @@ def train(cfg: DictConfig) -> None:
 
             r_acc = (y_pred["rank"].argmax(dim=1) == rank_t).float().mean().item()
             s_acc = (y_pred["suit"].argmax(dim=1) == suit_t).float().mean().item()
+            card_acc = (
+                ((y_pred["rank"].argmax(dim=1) == rank_t) & (y_pred["suit"].argmax(dim=1) == suit_t))
+                .float()
+                .mean()
+                .item()
+            )
+            avg_acc = (r_acc + s_acc) / 2
 
             # Logging
             if step % 20 == 0:
                 wandb.log(
-                    {"loss": loss.item(), "rank accuracy": r_acc, "suit accuracy": s_acc, "epoch": epoch},
+                    {
+                        "loss": loss.item(),
+                        "rank_accuracy": r_acc,
+                        "suit_accuracy": s_acc,
+                        "card_accuracy": card_acc,
+                        "avg_accuracy": avg_acc,
+                        "epoch": epoch,
+                    },
                     step=step,
                 )
             if i % 100 == 0:
@@ -113,34 +127,34 @@ def train(cfg: DictConfig) -> None:
                 both_correct += ((rank_pred == rank_targets) & (suit_pred == suit_targets)).sum().item()
                 n += img.size(0)
 
-                rank_acc = rank_correct / n
-                suit_acc = suit_correct / n
-                joint_acc = both_correct / n
+        val_r_acc = rank_correct / n
+        val_s_acc = suit_correct / n
+        val_card_acc = both_correct / n
+        val_avg_acc = (val_r_acc + val_s_acc) / 2
 
-                # Log in wandB
-                wandb.log(
-                    {
-                        "eval/rank_accuracy": rank_acc,
-                        "eval/suit_accuracy": suit_acc,
-                        "eval/joint_accuracy": joint_acc,
-                        "eval/num_samples": n,
-                    }
-                )
+        # Log in wandB
+        wandb.log(
+            {
+                "eval/rank_accuracy": val_r_acc,
+                "eval/suit_accuracy": val_s_acc,
+                "eval/card_accuracy": val_card_acc,
+                "eval/avg_accuracy": val_avg_acc,
+                "eval/num_samples": n,
+            }
+        )
 
     print("Training complete")
 
-    # Save model
     save_dir = os.path.join(get_original_cwd(), "models")
     os.makedirs(save_dir, exist_ok=True)
-    torch.save(model.state_dict(), os.path.join(save_dir, "model.pth"))
+    model_path = os.path.join(save_dir, "model.pth")
+    torch.save(model.state_dict(), model_path)
 
-    # Log as W&B artifact
-    model_artifact = wandb.Artifact(
-        name="card-deck_model",
-        type="model",
-    )
-    model_artifact.add_file("models/model.pth")
+    model_artifact = wandb.Artifact(name="card-deck_model", type="model")
+    model_artifact.add_file(model_path)
     wandb.log_artifact(model_artifact)
+
+    wandb.finish()
 
 
 @hydra.main(version_base=None, config_path=str(CONFIG_DIR), config_name="defaults")
