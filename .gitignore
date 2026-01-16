@@ -187,3 +187,6 @@ models/
 
 # Service account key
 dtu-mlops-group-48-1ddc4e04b98d.json
+
+# Hydra output
+outputs/
