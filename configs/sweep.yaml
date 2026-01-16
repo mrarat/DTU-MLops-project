@@ -1,0 +1,33 @@
+program: src/mlops/train.py
+project: playing-card-classifier
+entity: mlops-group-42
+method: bayes
+metric:
+  goal: maximize
+  name: eval/best_avg_accuracy
+parameters:
+  lr:
+    max: 0.1
+    min: 0.0001
+    distribution: log_uniform_values
+  r_weights:
+    values: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  batch_size:
+    values: [16, 32, 64]
+  epochs:
+    values: [5, 10, 15]
+  seed:
+    values: [42]
+run_cap: 10
+
+command:
+  - ${env}
+  - uv
+  - run
+  - invoke
+  - train
+  - --
+  - hyperparameters.lr=${lr}
+  - hyperparameters.batch_size=${batch_size}
+  - hyperparameters.epochs=${epochs}
+  - hyperparameters.seed=${seed}
