@@ -9,7 +9,6 @@ import numpy as np
 from hydra.utils import get_original_cwd
 from google.cloud import storage
 from google.oauth2 import service_account
-import typer
 from typing import Any, Dict
 from omegaconf import OmegaConf
 from omegaconf.dictconfig import DictConfig
@@ -60,7 +59,8 @@ def download_from_gcs(bucket, gcs_path, local_path):
 def train(cfg: DictConfig) -> None:
     # Resolve interpolations + convert to plain Python for W&B
     resolved_cfg: Dict[str, Any] = OmegaConf.to_container(cfg, resolve=True)
-
+    
+    wandb.login(key=os.environ["WANDB_API_KEY"])
     # Initialize WandB
     wandb.init(project=cfg.wandb.project, entity=cfg.wandb.entity, job_type="train", config=resolved_cfg)
 
