@@ -4,17 +4,9 @@ steps:
 # ------------------------------
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Build container train image'
-  env:
-    - DOCKER_BUILDKIT=1
+  env: ['DOCKER_BUILDKIT=1']
   args:
-    [
-      'build',
-      '-t',
-      'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest',
-      '-f',
-      'dockerfiles/train.dockerfile',
-      '.'
-    ]
+    ['build', '-t', 'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest', '-f', 'dockerfiles/train.dockerfile', '.']
 
 # ------------------------------
 # Push Train Image
@@ -22,10 +14,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container train image'
   args:
-    [
-      'push',
-      'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest'
-    ]
+    ['push', 'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest']
 
 # ------------------------------
 # Run Training
@@ -33,15 +22,15 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Run training'
   entrypoint: 'bash'
-  secretEnv: ["GOOGLE_APPLICATION_CREDENTIALS", "WANDB_API_KEY"]
+  secretEnv: ["GCP_CREDS", "WANDB_API_KEY"]
   args:
     - "-c"
     - |
       set -e
       mkdir -p /tmp/creds
-      echo "$GOOGLE_APPLICATION_CREDENTIALS" > /tmp/creds/gcp-credentials.json
+      echo "$GCP_CREDS" > /tmp/gcp-credentials.json
       docker run --rm \
-        -v /tmp/creds/gcp-credentials.json:/tmp/gcp-credentials.json:ro \
+        -v /tmp/gcp-credentials.json:/tmp/gcp-credentials.json:ro \
         -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json \
         -e WANDB_API_KEY="$WANDB_API_KEY" \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest
@@ -51,17 +40,9 @@ steps:
 # ------------------------------
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Build container evaluate image'
-  env:
-    - DOCKER_BUILDKIT=1
+  env: ['DOCKER_BUILDKIT=1']
   args:
-    [
-      'build',
-      '-t',
-      'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest',
-      '-f',
-      'dockerfiles/evaluate.dockerfile',
-      '.'
-    ]
+    ['build', '-t', 'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest', '-f', 'dockerfiles/evaluate.dockerfile', '.']
 
 # ------------------------------
 # Push Evaluate Image
@@ -69,10 +50,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container evaluate image'
   args:
-    [
-      'push',
-      'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest'
-    ]
+    ['push', 'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest']
 
 # ------------------------------
 # Run Evaluation
@@ -80,15 +58,15 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Run evaluate'
   entrypoint: 'bash'
-  secretEnv: ["GOOGLE_APPLICATION_CREDENTIALS", "WANDB_API_KEY"]
+  secretEnv: ["GCP_CREDS", "WANDB_API_KEY"]
   args:
     - "-c"
     - |
       set -e
       mkdir -p /tmp/creds
-      echo "$GOOGLE_APPLICATION_CREDENTIALS" > /tmp/creds/gcp-credentials.json
+      echo "$GCP_CREDS" > /tmp/gcp-credentials.json
       docker run --rm \
-        -v /tmp/creds/gcp-credentials.json:/tmp/gcp-credentials.json:ro \
+        -v /tmp/gcp-credentials.json:/tmp/gcp-credentials.json:ro \
         -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json \
         -e WANDB_API_KEY="$WANDB_API_KEY" \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest
@@ -102,6 +80,6 @@ options:
 availableSecrets:
   secretManager:
     - versionName: projects/684678738707/secrets/GOOGLE_APPLICATION_CREDENTIALS/versions/latest
-      env: 'GOOGLE_APPLICATION_CREDENTIALS'
+      env: 'GCP_CREDS'
     - versionName: projects/684678738707/secrets/WANDB_API_KEY/versions/latest
       env: 'WANDB_API_KEY'
