@@ -26,7 +26,7 @@ steps:
   args:
     - '-c'
     - |
-      echo "$$GOOGLE_APPLICATION_CREDENTIALS" > /tmp/credentials.json
+      echo $$GOOGLE_APPLICATION_CREDENTIALS > /tmp/credentials.json
       docker run --rm \
         -v /tmp/credentials.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json \
         -e GOOGLE_APPLICATION_CREDENTIALS=/root/dtu-mlops-group-48-1ddc4e04b98d.json \
@@ -61,7 +61,7 @@ steps:
   args:
     - '-c'
     - |
-      echo "$$GOOGLE_APPLICATION_CREDENTIALS" > /tmp/credentials.json
+      echo $$GOOGLE_APPLICATION_CREDENTIALS > /tmp/credentials.json
       docker run --rm \
         -v /tmp/credentials.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json \
         -e GOOGLE_APPLICATION_CREDENTIALS=/root/dtu-mlops-group-48-1ddc4e04b98d.json \
