@@ -184,3 +184,6 @@ wandb/
 
 # Model weights
 models/
+
+# Outputs
+outputs/
