@@ -28,8 +28,8 @@ steps:
     - |
       echo '$$GOOGLE_APPLICATION_CREDENTIALS' > /tmp/gcp-credentials.json
       docker run --rm \
-        -v /tmp/gcp-credentials.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json:ro \
-        -e GOOGLE_APPLICATION_CREDENTIALS=/root/dtu-mlops-group-48-1ddc4e04b98d.json \
+        -v /tmp/gcp-credentials.json:/tmp/gcp-credentials.json:ro \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json \
         -e WANDB_API_KEY=$$WANDB_API_KEY \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest
   secretEnv: ["GOOGLE_APPLICATION_CREDENTIALS", "WANDB_API_KEY"]
@@ -63,8 +63,8 @@ steps:
     - |
       echo '$$GOOGLE_APPLICATION_CREDENTIALS' > /tmp/gcp-credentials.json
       docker run --rm \
-        -v /tmp/gcp-credentials.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json:ro \
-        -e GOOGLE_APPLICATION_CREDENTIALS=/root/dtu-mlops-group-48-1ddc4e04b98d.json \
+        -v /tmp/gcp-credentials.json:/tmp/gcp-credentials.json:ro \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json \
         -e WANDB_API_KEY=$$WANDB_API_KEY \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest
   secretEnv: ["GOOGLE_APPLICATION_CREDENTIALS", "WANDB_API_KEY"]
