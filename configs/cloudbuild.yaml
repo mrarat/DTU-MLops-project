@@ -27,8 +27,9 @@ steps:
     [
       'run',
       '--rm',
-      '-e', 'GOOGLE_APPLICATION_CREDENTIALS=$$GOOGLE_APPLICATION_CREDENTIAL',
-      '-e', 'WANDB_API_KEY=$$WANDB_API_KEY',
+      '-e', 'GOOGLE_APPLICATION_CREDENTIALS=/root/sa.json',  # inside container
+      '-e', 'WANDB_API_KEY',  # secret injected automatically
+      '-v', '$$GOOGLE_APPLICATION_CREDENTIAL:/root/sa.json',  # mount GCP credentials file
       'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest'
     ]
   secretEnv: ["GOOGLE_APPLICATION_CREDENTIAL", "WANDB_API_KEY"]
@@ -61,8 +62,9 @@ steps:
     [
       'run',
       '--rm',
-      '-e', 'GOOGLE_APPLICATION_CREDENTIALS=$$GOOGLE_APPLICATION_CREDENTIAL',
-      '-e', 'WANDB_API_KEY=$$WANDB_API_KEY',
+      '-e', 'GOOGLE_APPLICATION_CREDENTIALS=/root/sa.json',  # inside container
+      '-e', 'WANDB_API_KEY',  # secret injected automatically
+      '-v', '$$GOOGLE_APPLICATION_CREDENTIAL:/root/sa.json',  # mount GCP credentials file
       'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest'
     ]
   secretEnv: ["GOOGLE_APPLICATION_CREDENTIAL", "WANDB_API_KEY"]
