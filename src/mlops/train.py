@@ -3,7 +3,6 @@ from mlops.model import Model
 from mlops.data import load_data
 import torch
 import hydra
-import logging
 import os
 from hydra.utils import get_original_cwd
 import wandb
@@ -12,10 +11,6 @@ import numpy as np
 from omegaconf import OmegaConf
 from omegaconf.dictconfig import DictConfig
 from pathlib import Path
-
-
-log = logging.getLogger(__name__)
-
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
@@ -57,8 +52,6 @@ def train(cfg: DictConfig) -> None:
     rank_weight = 1
     suit_weight = 1
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-
-    # statistics = {"train_loss": [], "train_accuracy_suit": [], "train_accuracy_rank": []}
 
     step = 0
     for epoch in range(epochs):
