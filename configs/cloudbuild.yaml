@@ -22,15 +22,16 @@ steps:
 
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Run training'
-  entrypoint: 'docker'
+  entrypoint: 'bash'
   args:
-    [
-      'run',
-      '--rm',
-      '-e', 'GOOGLE_APPLICATION_CREDENTIALS',
-      '-e', 'WANDB_API_KEY', 
-      'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest'
-    ]
+    - '-c'
+    - |
+      echo "$$GOOGLE_APPLICATION_CREDENTIALS" > /tmp/credentials.json
+      docker run --rm \
+        -v /tmp/credentials.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/root/dtu-mlops-group-48-1ddc4e04b98d.json \
+        -e WANDB_API_KEY \
+        europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest
   secretEnv: ["GOOGLE_APPLICATION_CREDENTIALS", "WANDB_API_KEY"]
 
 - name: 'gcr.io/cloud-builders/docker'
@@ -56,15 +57,16 @@ steps:
 
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Run evaluation'
-  entrypoint: 'docker'
+  entrypoint: 'bash'
   args:
-    [
-      'run',
-      '--rm',
-      '-e', 'GOOGLE_APPLICATION_CREDENTIALS',
-      '-e', 'WANDB_API_KEY', 
-      'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest'
-    ]
+    - '-c'
+    - |
+      echo "$$GOOGLE_APPLICATION_CREDENTIALS" > /tmp/credentials.json
+      docker run --rm \
+        -v /tmp/credentials.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/root/dtu-mlops-group-48-1ddc4e04b98d.json \
+        -e WANDB_API_KEY \
+        europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest
   secretEnv: ["GOOGLE_APPLICATION_CREDENTIALS", "WANDB_API_KEY"]
 
 options:

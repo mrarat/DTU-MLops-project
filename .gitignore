@@ -6,6 +6,10 @@ manual_test/
 # other local dev info
 .vscode/
 
+# Google Cloud credentials (should never be committed)
+*.json
+dtu-mlops-group-48-1ddc4e04b98d.json
+
 # Mac OS-specific storage files
 .DS_Store
 
