@@ -45,6 +45,7 @@ def upload_to_gcs(local_file, bucket, gcs_path) -> None:
 
 
 def download_from_gcs(bucket, gcs_path, local_path):
+    print("Downloading from GCS...")
     credentials_path = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
     credentials = service_account.Credentials.from_service_account_file(credentials_path)
@@ -75,6 +76,7 @@ def train(cfg: DictConfig) -> None:
 
     # Load data
     download_from_gcs("dtu-mlops-group-48-data","data/processed/train.pt","data/processed/train.pt")
+    download_from_gcs("dtu-mlops-group-48-data","data/processed/valid.pt","data/processed/valid.pt")
 
     train_set = load_data(processed_dir=os.path.join(get_original_cwd(), "data/processed"), split="train")
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
@@ -124,11 +126,12 @@ def train(cfg: DictConfig) -> None:
 
 
         # Compute accuracy
-        r_acc = (y_pred['rank'].argmax(dim=1) == rank_t).float().mean().item()
-        s_acc = (y_pred['suit'].argmax(dim=1) == suit_t).float().mean().item()
-        c_acc = (((y_pred["rank"].argmax(dim=1) == rank_t) & (y_pred["suit"].argmax(dim=1) == suit_t)).float().mean().item())
-        avg_acc = (r_acc + s_acc) / 2
-        loss = loss_sum / len(train_set)
+   
+        train_loss = train_loss_sum / n
+        train_r_acc = rank_correct / n
+        train_s_acc = suit_correct / n
+        train_card_acc = card_correct / n
+        train_avg_acc = (train_r_acc + train_s_acc) / 2
 
         
             
@@ -172,11 +175,11 @@ def train(cfg: DictConfig) -> None:
         wandb.log(
             {
                 "epoch:": epoch,
-                "train/loss": loss.item(),
-                "train/rank_accuracy": r_acc,
-                "train/suit_accuracy": s_acc,
-                "train/card_accuracy": c_acc,
-                "train/avg_accuracy": avg_acc,
+                "train/loss": train_loss,
+                "train/rank_accuracy": train_r_acc,
+                "train/suit_accuracy": train_s_acc,
+                "train/card_accuracy": train_card_acc,
+                "train/avg_accuracy": train_avg_acc,
                 
                 "eval/val_loss": val_loss,
                 "eval/rank_accuracy": val_r_acc,
@@ -198,6 +201,7 @@ def train(cfg: DictConfig) -> None:
         )
         model_artifact.add_file(best_model_path)
         wandb.log_artifact(model_artifact)
+        upload_to_gcs(best_model_path, "dtu-mlops-group-48-data", "models/best_model.pth")
 
     wandb.finish()
     

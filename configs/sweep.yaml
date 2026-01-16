@@ -28,6 +28,7 @@ command:
   - train
   - --
   - hyperparameters.lr=${lr}
+  - hyperparameters.r_weight=${r_weight}
   - hyperparameters.batch_size=${batch_size}
   - hyperparameters.epochs=${epochs}
   - hyperparameters.seed=${seed}
