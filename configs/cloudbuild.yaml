@@ -72,7 +72,7 @@ options:
 
 availableSecrets:
   secretManager:
-  - versionname: projects/684678738707/secrets/GOOGLE_APPLICATION_CREDENTIALS
+  - versionName: projects/684678738707/secrets/GOOGLE_APPLICATION_CREDENTIALS
     env: 'GOOGLE_APPLICATION_CREDENTIAL'
-  - versionname: projects/684678738707/secrets/WANDB_API_KEY
+  - versionName: projects/684678738707/secrets/WANDB_API_KEY
     env: 'WANDB_API_KEY'
