@@ -1,19 +1,26 @@
 from mlops.model import Model
 from mlops.data import load_data
 import torch
-import hydra
 import os
-from hydra.utils import get_original_cwd
 import wandb
 from google.cloud import storage
+import typer
 
 
-def upload_to_gcs(local_file: str, bucket_name: str, gcs_path: str):
+def upload_to_gcs(local_file, bucket, gcs_path):
     client = storage.Client()
-    bucket = client.bucket(bucket_name)
+    bucket = client.bucket(bucket)
     blob = bucket.blob(gcs_path)
     blob.upload_from_filename(local_file)
-    print(f"Uploaded {local_file} to gs://{bucket_name}/{gcs_path}")
+    print(f"Uploaded {local_file} to gs://{bucket}/{gcs_path}")
+
+def download_from_gcs(bucket, gcs_path, local_path):
+    client = storage.Client()
+    bucket = client.bucket(bucket)
+    blob = bucket.blob(gcs_path)
+
+    os.makedirs(os.path.dirname(local_path), exist_ok=True)
+    blob.download_to_filename(local_path)
 
 
 DEVICE = torch.device(
@@ -40,6 +47,7 @@ def train():
                    'learning rate':lr,'seed':seed})
 
     # Loading data
+    download_from_gcs("dtu-mlops-group-48-data","data/processed/train.pt","data/processed/train.pt")
     train_set = load_data(split = "train")
     model = Model().to(DEVICE)
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
@@ -92,6 +100,7 @@ def train():
     print("Training complete")   
 
     # Save model
+    os.makedirs("models", exist_ok=True)
     torch.save(model.state_dict(), "models/model.pth")
     upload_to_gcs("models/model.pth", "dtu-mlops-group-48-data", "models/model.pth")
 
@@ -103,5 +112,7 @@ def train():
     model_artifact.add_file("models/model.pth")
     run.log_artifact(model_artifact)
 
+    wandb.finish()
+
 if __name__ == "__main__":
-    train()
+    typer.run(train)

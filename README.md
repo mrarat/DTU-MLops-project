@@ -93,11 +93,17 @@ Requieres the wand API key to be in .env.
 
 Build and run train.dockerfile:
 - docker build -f dockerfiles/train.dockerfile . -t train:latest
-- docker run --env-file .env --name experiment-mlops-train train:latest
+- docker run --rm \
+  --env-file .env \
+  -v $PWD/dtu-mlops-group-48-1ddc4e04b98d.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json \
+  train:latest
 
 Build and run evaluate.dockerfile:
 - docker build -f dockerfiles/evaluate.dockerfile . -t evaluate:latest
-- docker run --env-file .env --name experiment-mlops-evaluate evaluate:latest
+- docker run --rm \
+  --env-file .env \
+  -v $PWD/dtu-mlops-group-48-1ddc4e04b98d.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json \
+  evaluate:latest
 
 
 ## Google Cloud

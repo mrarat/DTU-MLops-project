@@ -6,6 +6,7 @@ import typer
 import wandb
 from google.cloud import storage
 from io import BytesIO
+import os
 
 DEVICE = torch.device(
     "cuda" if torch.cuda.is_available()
@@ -34,23 +35,34 @@ def load_model_from_gcs(bucket_name: str, model_file: str, device: torch.device)
     model.eval()
     return model
 
-def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
+def download_from_gcs(bucket, gcs_path, local_path):
+    client = storage.Client()
+    bucket = client.bucket(bucket)
+    blob = bucket.blob(gcs_path)
+
+    os.makedirs(os.path.dirname(local_path), exist_ok=True)
+    blob.download_to_filename(local_path)
+
+
+def evaluate(batch_size: int = 32) -> None:
     """Evaluate a trained model."""
     print("Evaluating like my life depended on it")
-    print(f"Evaluating model from bucket {BUCKET_NAME}/{model_checkpoint}...")
+    print(f"Evaluating model from bucket {BUCKET_NAME}/{MODEL_FILE}...")
     
     # WandB init
     run = wandb.init(
         project="playing-cards-mlops",
         job_type="evaluation",
         config={
-            "checkpoint": model_checkpoint,
+            "checkpoint": MODEL_FILE,
             "batch_size": batch_size,
             "device": str(DEVICE),
         },
     )
     # Load model directly from GCS
-    model = load_model_from_gcs(BUCKET_NAME, model_checkpoint, DEVICE)
+    model = load_model_from_gcs(BUCKET_NAME, MODEL_FILE, DEVICE)
+
+    download_from_gcs("dtu-mlops-group-48-data","data/processed/test.pt","data/processed/test.pt")
 
     test_set = load_data(split = "test")
     test_dataloader = torch.utils.data.DataLoader(test_set, batch_size=batch_size)
@@ -94,4 +106,4 @@ def evaluate(model_checkpoint: str, batch_size: int = 32) -> None:
     wandb.finish()
 
 if __name__ == "__main__":
-    evaluate(MODEL_FILE)
+    typer.run(evaluate)
