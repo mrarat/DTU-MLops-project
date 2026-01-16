@@ -6,12 +6,7 @@ steps:
   id: 'Build & Push Train Image'
   env: ['DOCKER_BUILDKIT=1']
   args:
-    [
-      'build', 
-      '-t', 'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest',
-      '-f', 'dockerfiles/train.dockerfile', 
-      '.'
-    ]
+    ['build', '-t', 'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest', '-f', 'dockerfiles/train.dockerfile', '.']
 
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push Train Image'
@@ -32,7 +27,7 @@ steps:
       docker run --rm \
         -v /secrets/GOOGLE_APPLICATION_CREDENTIALS:/tmp/gcp-credentials.json:ro \
         -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json \
-        -e WANDB_API_KEY="$WANDB_API_KEY" \
+        -e WANDB_API_KEY \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest
 
 # ------------------------------
@@ -42,12 +37,7 @@ steps:
   id: 'Build & Push Evaluate Image'
   env: ['DOCKER_BUILDKIT=1']
   args:
-    [
-      'build', 
-      '-t', 'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest',
-      '-f', 'dockerfiles/evaluate.dockerfile', 
-      '.'
-    ]
+    ['build', '-t', 'europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest', '-f', 'dockerfiles/evaluate.dockerfile', '.']
 
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push Evaluate Image'
@@ -68,12 +58,9 @@ steps:
       docker run --rm \
         -v /secrets/GOOGLE_APPLICATION_CREDENTIALS:/tmp/gcp-credentials.json:ro \
         -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json \
-        -e WANDB_API_KEY="$WANDB_API_KEY" \
+        -e WANDB_API_KEY \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest
 
-# ------------------------------
-# Options & Secrets
-# ------------------------------
 options:
   logging: CLOUD_LOGGING_ONLY
 
