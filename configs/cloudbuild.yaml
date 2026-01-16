@@ -26,7 +26,7 @@ steps:
       set -e
       docker run --rm \
         -v /secrets/GOOGLE_APPLICATION_CREDENTIALS:/secrets/GOOGLE_APPLICATION_CREDENTIALS:ro \
-        -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/GOOGLE_APPLICATION_CREDENTIALS/GOOGLE_APPLICATION_CREDENTIALS \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/GOOGLE_APPLICATION_CREDENTIALS \
         -e WANDB_API_KEY \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest
 
@@ -57,7 +57,7 @@ steps:
       set -e
       docker run --rm \
         -v /secrets/GOOGLE_APPLICATION_CREDENTIALS:/secrets/GOOGLE_APPLICATION_CREDENTIALS:ro \
-        -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/GOOGLE_APPLICATION_CREDENTIALS/GOOGLE_APPLICATION_CREDENTIALS \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/GOOGLE_APPLICATION_CREDENTIALS \
         -e WANDB_API_KEY \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest
 

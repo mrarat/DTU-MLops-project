@@ -95,19 +95,16 @@ Build and run train.dockerfile:
 - docker build -f dockerfiles/train.dockerfile . -t train:latest
 - docker run --rm \
   --env-file .env \
-  -v $PWD/dtu-mlops-group-48-1ddc4e04b98d.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json \
-  -e GOOGLE_APPLICATION_CREDENTIALS=/root/dtu-mlops-group-48-1ddc4e04b98d.json \
-  -e WANDB_API_KEY \
+  -e GOOGLE_APPLICATION_CREDENTIALS=/root/creds.json \
+  -v $PWD/dtu-mlops-group-48-1ddc4e04b98d.json:/root/creds.json:ro \
   train:latest
-
 
 Build and run evaluate.dockerfile:
 - docker build -f dockerfiles/evaluate.dockerfile . -t evaluate:latest
 - docker run --rm \
   --env-file .env \
-  -v $PWD/dtu-mlops-group-48-1ddc4e04b98d.json:/root/dtu-mlops-group-48-1ddc4e04b98d.json \
-  -e GOOGLE_APPLICATION_CREDENTIALS=/root/dtu-mlops-group-48-1ddc4e04b98d.json \
-  -e WANDB_API_KEY \
+  -e GOOGLE_APPLICATION_CREDENTIALS=/root/creds.json \
+  -v $PWD/dtu-mlops-group-48-1ddc4e04b98d.json:/root/creds.json:ro \
   evaluate:latest
 
 

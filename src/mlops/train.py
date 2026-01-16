@@ -7,22 +7,10 @@ from google.cloud import storage
 from google.oauth2 import service_account
 import typer
 
-
-
-def get_credentials_file():
-    """
-    Handles both local file mount and Cloud Build secret mount.
-    """
-    path = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    # Cloud Build secrets are directories; check if path is a directory
-    if os.path.isdir(path):
-        # file inside directory
-        return os.path.join(path, "GOOGLE_APPLICATION_CREDENTIALS")
-    return path  # already a file (local Docker mount)
-
 def upload_to_gcs(local_file, bucket, gcs_path):
-    credentials_file = get_credentials_file()
-    credentials = service_account.Credentials.from_service_account_file(credentials_file)
+    credentials_path = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+
+    credentials = service_account.Credentials.from_service_account_file(credentials_path)
     client = storage.Client(credentials=credentials, project="dtu-mlops-group-48")
     bucket = client.bucket(bucket)
     blob = bucket.blob(gcs_path)
@@ -31,11 +19,13 @@ def upload_to_gcs(local_file, bucket, gcs_path):
 
 
 def download_from_gcs(bucket, gcs_path, local_path):
-    credentials_file = get_credentials_file()
-    credentials = service_account.Credentials.from_service_account_file(credentials_file)
+    credentials_path = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+
+    credentials = service_account.Credentials.from_service_account_file(credentials_path)
     client = storage.Client(credentials=credentials, project="dtu-mlops-group-48")
     bucket = client.bucket(bucket)
     blob = bucket.blob(gcs_path)
+
     os.makedirs(os.path.dirname(local_path), exist_ok=True)
     blob.download_to_filename(local_path)
 
