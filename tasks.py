@@ -41,7 +41,18 @@ def docker_build(ctx: Context) -> None:
         echo=True,
         pty=not WINDOWS,
     )
+    ctx.run("docker build -f docker files/frontend.dockerfile . -t frontend:latest", echo=True, pty=not WINDOWS)
     ctx.run("docker run --env-file .env --name experiment-mlops-train train:latest", echo=True, pty=not WINDOWS)
+
+
+@task
+def docker_build_frontend(ctx: Context) -> None:
+    """Build docker image for frontend."""
+    ctx.run(
+        "docker build -f dockerfiles/frontend.dockerfile . -t frontend:latest",
+        echo=True,
+        pty=not WINDOWS,
+    )
 
 
 # Documentation commands

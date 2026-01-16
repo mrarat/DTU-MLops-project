@@ -1,0 +1,19 @@
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+
+RUN apt update && \
+    apt install --no-install-recommends -y build-essential gcc && \
+    apt clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /
+
+COPY uv.lock uv.lock
+COPY pyproject.toml pyproject.toml
+COPY README.md README.md
+COPY LICENSE LICENSE
+COPY src/ src/
+
+ENV UV_LINK_MODE=copy
+RUN --mount=type=cache,target=/root/.cache/uv uv sync
+
+EXPOSE 8001
+ENTRYPOINT ["uv", "run", "streamlit", "run", "src/mlops/frontend.py", "--server.port", "8001", "--server.address=0.0.0.0"]
