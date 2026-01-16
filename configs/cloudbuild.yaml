@@ -24,13 +24,13 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Run Training'
   entrypoint: 'bash'
-  secretEnv: ["WANDB_API_KEY"]
+  secretEnv: ["GOOGLE_APPLICATION_CREDENTIALS", "WANDB_API_KEY"]
   args:
     - "-c"
     - |
       set -e
       docker run --rm \
-        -v /secrets/GCP_CREDS:/tmp/gcp-credentials.json:ro \
+        -v /secrets/GOOGLE_APPLICATION_CREDENTIALS:/tmp/gcp-credentials.json:ro \
         -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json \
         -e WANDB_API_KEY="$WANDB_API_KEY" \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/train:latest
@@ -60,13 +60,13 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Run Evaluate'
   entrypoint: 'bash'
-  secretEnv: ["WANDB_API_KEY"]
+  secretEnv: ["GOOGLE_APPLICATION_CREDENTIALS", "WANDB_API_KEY"]
   args:
     - "-c"
     - |
       set -e
       docker run --rm \
-        -v /secrets/GCP_CREDS:/tmp/gcp-credentials.json:ro \
+        -v /secrets/GOOGLE_APPLICATION_CREDENTIALS:/tmp/gcp-credentials.json:ro \
         -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json \
         -e WANDB_API_KEY="$WANDB_API_KEY" \
         europe-west1-docker.pkg.dev/dtu-mlops-group-48/our-artifact-registry/evaluate:latest
@@ -80,6 +80,6 @@ options:
 availableSecrets:
   secretManager:
     - versionName: projects/684678738707/secrets/GOOGLE_APPLICATION_CREDENTIALS/versions/latest
-      mountPath: '/secrets/GCP_CREDS'
+      env: 'GOOGLE_APPLICATION_CREDENTIALS'
     - versionName: projects/684678738707/secrets/WANDB_API_KEY/versions/latest
       env: 'WANDB_API_KEY'
