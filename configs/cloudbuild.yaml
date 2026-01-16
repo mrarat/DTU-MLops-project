@@ -1,6 +1,8 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Build container train image'
+  env:
+      - DOCKER_BUILDKIT=1
   args:
     [
       'build',
@@ -32,6 +34,8 @@ steps:
 
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Build container evaluate image'
+  env:
+      - DOCKER_BUILDKIT=1
   args:
     [
       'build',
